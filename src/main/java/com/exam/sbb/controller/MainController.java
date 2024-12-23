@@ -1,14 +1,19 @@
 package com.exam.sbb.controller;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class MainController {
@@ -81,8 +86,24 @@ public class MainController {
 	@ResponseBody
 	public int showPlus2(@RequestParam(value="a") int a, @RequestParam(value="b") int b) {
 		
-		return a+b;
+		return a + b;
 	}
+	
+	
+	
+	//jsp 에서 배웠던 서블릿 방식 다 수동이다... 스프링부트는 이렇게 안해도 된다.....
+	@GetMapping("/plus3")
+	@ResponseBody
+	public void showPlus3(HttpServletRequest req, HttpServletResponse resp)throws IOException {
+		//쿼리스트링 형태의 데이터는 오브젝트 형태로 들어오기 때문에 무조건 형변환해줘야한다.
+		//따라서 오브젝트 형태인 /plus3?a=1&b=5 라는 값을 parseInt로 int형태로 형변환 해준다.
+		int a = Integer.parseInt(req.getParameter("a"));
+		int b = Integer.parseInt(req.getParameter("b"));
+
+		//서블릿 내장객체
+		resp.getWriter().append(a + b + "");
+	}
+	
 	
 	
 	@GetMapping("/minus")
@@ -143,6 +164,22 @@ public class MainController {
 				.collect(Collectors.joining("<br>\n"));
 	}
 	
+	
+	
+	//쿼리스트링 @RequestParam 과 다른 방식.
+	@GetMapping("/mbti/{name}")
+	@ResponseBody
+	public String showMbti(@PathVariable("name") String name) {
+		//자바 높은 버전에서는 break문 생략가능
+		String rs = switch (name) {
+			case "홍길동" -> "INFP";
+			case "홍길순" -> "ENFP";
+			case "임꺽정" -> "ESFJ";
+			case "송준호" -> "ISFJ";
+			default -> "모름";
+		};
+		return rs;
+	}
 	
 	
 	
