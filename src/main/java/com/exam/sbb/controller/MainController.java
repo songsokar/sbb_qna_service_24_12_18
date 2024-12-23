@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainController {
@@ -197,6 +198,37 @@ public class MainController {
 			default -> "모름";
 		};
 		//return rs;
+	}
+	
+	
+	@GetMapping("/saveSession/{name}/{value}")
+	@ResponseBody
+	public String saveSession(@PathVariable("name") String name, 
+								@PathVariable("value") String value, 
+								HttpServletRequest req) {
+		
+		HttpSession session = req.getSession();
+		session.setAttribute(name, value);
+		return "세션변수 %s의 값이 %s(으)로 설정되었습니다.".formatted(name, value);
+	}
+	
+	
+	
+	//먼저 위에 /saveSession/{name}/{value} 을 한번 실행 후에 /getSession/{name} 을 치면 value가 
+	//쿠키에 저장되어서 나오는데
+	//껐다켜거나 아니면 쿠키를 삭제 해주면 /getSession/{name} value값이 null 나온다
+	//개발자도구 application에 storage에서 쿠키 영역에 로컬영역 URL을 누르면 JSESSIONID 값이 나오는데 이값이 유지되면 
+	//바로 getSession의 value값이 나오고 클리어되거나 날아가면 getSession값의 value값이 null로 나오기 때문에 saveSession을 다시 해줘야한다.
+	@GetMapping("/getSession/{name}")
+	@ResponseBody
+	public String getSession(@PathVariable("name") String name, HttpSession session) {
+		//req => 쿠키 => JSESSIONID => 세션을 얻을 수 있다.
+		//근데 그냥 HttpServletRequest req 가 아니라 스프링 부트는 HttpSession session 이렇게 선언해서 바로 써도된다.
+		//따라서 HttpServletRequest req 선언하고 HttpSession session = req.getSession(); 이렇게 할 필요없이
+		//아래 처럼 쓰면되는데 session.getAttribute() 가 오브젝트라 String으로 형변환 해준다.
+		String value = (String) session.getAttribute(name); 
+		
+		return "세션변수 %s의 값은 %s 입니다.".formatted(name, value);
 	}
 	
 	
