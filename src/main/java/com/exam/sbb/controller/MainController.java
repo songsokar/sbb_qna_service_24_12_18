@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
+	
+	private int increaseNo = -1; //==> 전역변수로 둬야한다. 맨위로 이동해야 한다. 원래는
+	
 	@RequestMapping("/sbb")
 	
 	//아래 함수의 리턴값을 그대로 브라우저에 표시
@@ -59,5 +62,51 @@ public class MainController {
 				<h1>안녕하세요. POST방식으로 오신걸 환영합니다.</h1>
 				""".formatted(age);
 	}
+	
+	
+	@GetMapping("/plus")
+	@ResponseBody
+	public String showPlus(@RequestParam(value="a") int a, @RequestParam(value="b") int b) {
+		
+		return """
+				<h1>입력된 숫자: %d</h1>
+				""".formatted(a+b);
+	}
+	
+	
+	@GetMapping("/plus2")
+	@ResponseBody
+	public int showPlus2(@RequestParam(value="a") int a, @RequestParam(value="b") int b) {
+		
+		return a+b;
+	}
+	
+	
+	@GetMapping("/minus")
+	@ResponseBody
+	public String showMinus(@RequestParam(value="a") int a, @RequestParam(value="b") int b) {
+		
+		return """
+				<h1>입력된 숫자: %d</h1>
+				""".formatted(a-b);
+	}
+	
+	
+	@GetMapping("/minus2")
+	@ResponseBody
+	public int showMinus2(@RequestParam(value="a") int a, @RequestParam(value="b") int b) {
+		
+		return a-b;
+	}
+
+	 
+	@GetMapping("/increase")
+	@ResponseBody
+	public int showIncrease() {
+		//int increaseNo = -1; 전역변수로 선언해야 계속 증가 된다.
+		increaseNo++;
+		return increaseNo;
+	}
+	
 	
 }
