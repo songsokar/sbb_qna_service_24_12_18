@@ -1,5 +1,8 @@
 package com.exam.sbb.controller;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -109,4 +112,51 @@ public class MainController {
 	}
 	
 	
+	
+	@GetMapping("/gugudan")
+	@ResponseBody
+	public String showGugudan(@RequestParam(value = "dan") int dan, @RequestParam(value = "limit") int limit) {
+		String rs = "";
+		
+		for (int i=1; i <= limit; i++) {
+			rs += "%d * %d = %d<br>\n".formatted(dan, i, dan * i);
+		}
+		
+		return rs;
+	}
+	
+	
+	@GetMapping("/gugudan2")
+	@ResponseBody
+	public String showGugudan2(@RequestParam(value = "dan") Integer dan, @RequestParam(value = "limit") Integer limit) {
+		if(dan == null) {
+			dan = 9;
+		}
+		
+		if(limit == null) {
+			limit = 9;
+		}
+		
+		final Integer finalDan = dan;
+		return IntStream.rangeClosed(1, limit) //반복문, 1부터 리미트까지 반복문
+				.mapToObj(i -> "%d * %d = %d".formatted(finalDan, i, finalDan * i))
+				.collect(Collectors.joining("<br>\n"));
+	}
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
