@@ -182,6 +182,24 @@ public class MainController {
 	}
 	
 	
+	@GetMapping("/mbti2/{name}")
+	@ResponseBody
+	public String showMbti2(@PathVariable("name") String name) {
+		//자바 높은 버전에서는 break문 생략가능
+		return switch (name) {
+		//자바 최신문법
+			case "홍길순" -> {
+				char j = 'P';
+				yield "ENF"+j; //yield는 return과 같은 문법
+			}
+			case "임꺽정" -> "ESFJ";
+			case "홍길동", "박상원" -> "INFP";
+			default -> "모름";
+		};
+		//return rs;
+	}
+	
+	
 	
 }
 
