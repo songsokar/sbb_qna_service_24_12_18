@@ -1,6 +1,8 @@
 package com.exam.sbb.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -233,6 +235,7 @@ public class MainController {
 		return "세션변수 %s의 값은 %s 입니다.".formatted(name, value);
 	}
 	
+	private List<Article> articles = new ArrayList<>();
 	
 	
 	@GetMapping("/addArticle")
@@ -241,23 +244,40 @@ public class MainController {
 		//int id = 1;
 		//Article article = new Article(id, title, body); 
 		Article article = new Article(title, body); 	
+		articles.add(article);
+		
 		//return "%d번 게시물이 생성되었습니다.".formatted(id);
 		return "%d번 게시물이 생성되었습니다.".formatted(article.getId());
 	}
 	
+	@GetMapping("/article/{id}")
+	@ResponseBody
+	public Article getArticle(@PathVariable("id") int id) {
+
+		Article article = articles //id가 1번인 게시물이 앞에서 3번째
+				.stream()						// 1. 스트림 생성
+				.filter(a -> a.getId() == id)	// 2. 특정 id와 일치하는 요소 필터링
+				.findFirst()					// 3. 조건을 만족하는 첫 번째 요소 찾기
+				.get(); 						// 4. Optional에서 실제 값 가져오기
+		
+		return article;
+	}
+	
+	
+	
 	@AllArgsConstructor
+	@Getter
 	class Article {
 		private static int lastId = 0;
 		//static 변수나 클래스는 프로그램이 실행되면서 딱 한번 실행된다.
 		
-		@Getter
 		private int id;
 		private String title;
 		private String body;
 		
 		
 		public Article(String title, String body) {
-			this(++lastId, title, body);
+			this(++lastId, title, body); // 다른 생성자 호출 @AllArgsConstructor 가 있어서 모든 매개변수 생성자 존재
 		}
 		
 	}
