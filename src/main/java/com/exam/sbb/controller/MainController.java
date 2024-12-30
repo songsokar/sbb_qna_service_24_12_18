@@ -267,7 +267,8 @@ public class MainController {
 				.stream()						// 1. 스트림 생성
 				.filter(a -> a.getId() == id)	// 2. 특정 id와 일치하는 요소 필터링
 				.findFirst()					// 3. 조건을 만족하는 첫 번째 요소 찾기
-				.get(); 						// 4. Optional에서 실제 값 가져오기
+				//.get(); 						// 4. Optional에서 실제 값 가져오기
+				.orElse(null);
 		
 		return article;
 	}
@@ -282,7 +283,7 @@ public class MainController {
 				.stream()						// 1. 스트림 생성
 				.filter(a -> a.getId() == id)	// 2. 특정 id와 일치하는 요소 필터링
 				.findFirst()					// 3. 조건을 만족하는 첫 번째 요소 찾기
-				.get(); 						// 4. Optional에서 실제 값 가져오기
+				.orElse(null); //id매핑 되는 것이 있으면 article에 넣고 아니면 null을 저장
 
 		if(article == null) {
 			return "%d번 게시물은 존재하지 않습니다.".formatted(id);
