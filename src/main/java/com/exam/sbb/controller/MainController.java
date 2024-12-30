@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Controller
 public class MainController {
@@ -237,17 +238,28 @@ public class MainController {
 	@GetMapping("/addArticle")
 	@ResponseBody
 	public String getSession(@RequestParam("title") String title, @RequestParam("body") String body) {
-		int id = 1;
-		Article article = new Article(id, title, body); 
-			
-		return "%d번 게시물이 생성되었습니다.".formatted(id);
+		//int id = 1;
+		//Article article = new Article(id, title, body); 
+		Article article = new Article(title, body); 	
+		//return "%d번 게시물이 생성되었습니다.".formatted(id);
+		return "%d번 게시물이 생성되었습니다.".formatted(article.getId());
 	}
 	
 	@AllArgsConstructor
 	class Article {
+		private static int lastId = 0;
+		//static 변수나 클래스는 프로그램이 실행되면서 딱 한번 실행된다.
+		
+		@Getter
 		private int id;
 		private String title;
 		private String body;
+		
+		
+		public Article(String title, String body) {
+			this(++lastId, title, body);
+		}
+		
 	}
 	
 	
