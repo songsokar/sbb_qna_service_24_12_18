@@ -2,6 +2,7 @@ package com.exam.sbb.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Controller
 public class MainController {
@@ -235,7 +237,14 @@ public class MainController {
 		return "세션변수 %s의 값은 %s 입니다.".formatted(name, value);
 	}
 	
-	private List<Article> articles = new ArrayList<>();
+	//private List<Article> articles = new ArrayList<>();
+	
+	private List<Article> articles = new ArrayList<>(
+				Arrays.asList( //asList만 쓰면 수정불가능한 불변 데이터 지만  ArrayList<> 로 감싸면 수정가능
+						new Article("제목", "내용"), 
+						new Article("제목", "내용")
+						)
+				);
 	
 	
 	@GetMapping("/addArticle")
@@ -263,10 +272,34 @@ public class MainController {
 		return article;
 	}
 	
+	@GetMapping("/modifyArticle/{id}")
+	@ResponseBody 
+	public String modifyArticle(@PathVariable("id") int id, 
+								@RequestParam("title") String title, 
+								@RequestParam("body") String body) {
+
+		Article article = articles //id가 1번인 게시물이 앞에서 3번째
+				.stream()						// 1. 스트림 생성
+				.filter(a -> a.getId() == id)	// 2. 특정 id와 일치하는 요소 필터링
+				.findFirst()					// 3. 조건을 만족하는 첫 번째 요소 찾기
+				.get(); 						// 4. Optional에서 실제 값 가져오기
+
+		if(article == null) {
+			return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+		}
+		
+		article.setTitle(title);
+		article.setBody(body);
+		
+		return "%d번 게시물을 수정하였습니다..".formatted(article.getId());
+	}
+	
+	
 	
 	
 	@AllArgsConstructor
 	@Getter
+	@Setter
 	class Article {
 		private static int lastId = 0;
 		//static 변수나 클래스는 프로그램이 실행되면서 딱 한번 실행된다.
