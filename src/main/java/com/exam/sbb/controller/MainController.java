@@ -251,7 +251,7 @@ public class MainController {
 	}
 	
 	@GetMapping("/article/{id}")
-	@ResponseBody
+	@ResponseBody 
 	public Article getArticle(@PathVariable("id") int id) {
 
 		Article article = articles //id가 1번인 게시물이 앞에서 3번째
