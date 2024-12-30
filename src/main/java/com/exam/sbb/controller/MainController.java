@@ -298,6 +298,33 @@ public class MainController {
 	
 	
 	
+	
+	
+	@GetMapping("/deleteArticle/{id}")
+	@ResponseBody 
+	public String deleteArticle(@PathVariable("id") int id) {
+
+		Article article = articles //id가 1번인 게시물이 앞에서 3번째
+				.stream()						// 1. 스트림 생성
+				.filter(a -> a.getId() == id)	// 2. 특정 id와 일치하는 요소 필터링
+				.findFirst()					// 3. 조건을 만족하는 첫 번째 요소 찾기
+				.orElse(null); //id매핑 되는 것이 있으면 article에 넣고 아니면 null을 저장
+
+		if(article == null) {
+			return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+		}
+		
+		articles.remove(article);
+		
+		return "%d번 게시물을 삭제하였습니다..".formatted(article.getId());
+	}
+	
+	
+	
+	
+	
+	
+	
 	@AllArgsConstructor
 	@Getter
 	@Setter
