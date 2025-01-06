@@ -9,8 +9,10 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Controller
@@ -320,6 +323,28 @@ public class MainController {
 	}
 	
 	
+	@GetMapping("/addPersonOldWay")
+	@ResponseBody
+	//public Person addPersonOldWay (int id, int age, String name) {	
+	
+	public Person addPersonOldWay (@RequestParam("id") int id, 
+									@RequestParam("age") int age, 
+									@RequestParam("name") String name) {
+		
+		
+		Person p = new Person(id, age, name);
+		return p;
+	}
+	
+	@GetMapping("/addPerson")
+	@ResponseBody 
+	public Person addPerson(@ModelAttribute Person p) {
+		//Person p = new Person(id, age, name); 
+		//-->이런 인스턴스화시켜서 쓰는게 아닌 @ModelAttribute로 해서 바로 쓰려면 Person 클래스에..static을 붙여야한다.
+		return p;
+	}
+	
+	
 	
 	
 	
@@ -340,9 +365,19 @@ public class MainController {
 		public Article(String title, String body) {
 			this(++lastId, title, body); // 다른 생성자 호출 @AllArgsConstructor 가 있어서 모든 매개변수 생성자 존재
 		}
-		
 	}
 	
+	
+	
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	@Setter
+	static class Person {
+		private int id;
+		private int age;
+		private String name;
+	}
 	
 	
 }
