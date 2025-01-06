@@ -344,6 +344,14 @@ public class MainController {
 		return p;
 	}
 	
+	@GetMapping("/addPerson/{id}")
+	@ResponseBody 
+	public Person addPerson1(@ModelAttribute Person p) {
+		//Person p = new Person(id, age, name); 
+		//-->이런 인스턴스화시켜서 쓰는게 아닌 @ModelAttribute로 해서 바로 쓰려면 Person 클래스에..static을 붙여야한다.
+		return p;
+	}
+	
 	
 	
 	
