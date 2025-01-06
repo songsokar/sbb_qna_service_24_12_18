@@ -339,11 +339,15 @@ public class MainController {
 	@GetMapping("/addPerson")
 	@ResponseBody 
 	public Person addPerson(@ModelAttribute Person p) {
-		//Person p = new Person(id, age, name); 
+		//p = new Person(2, 4, "aaa"); --->>이렇게 쓰거나 
+		//http://localhost:8080/addPerson?id=1&age=20&name=홍길동 이렇게 주소창에 쓰거나
+		
 		//-->이런 인스턴스화시켜서 쓰는게 아닌 @ModelAttribute로 해서 바로 쓰려면 Person 클래스에..static을 붙여야한다.
 		return p;
 	}
 	
+	
+	//액션 메서드
 	@GetMapping("/addPerson/{id}")
 	@ResponseBody 
 	public Person addPerson1(@ModelAttribute Person p) {
